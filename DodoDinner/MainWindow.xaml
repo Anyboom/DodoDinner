@@ -1,0 +1,274 @@
+﻿<Window x:Class="DodoDinner.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DodoDinner"
+        xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
+        mc:Ignorable="d"
+        ResizeMode="CanResizeWithGrip"
+        AllowsTransparency="True"
+        Background="Transparent"
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        FontFamily="Inter"
+        MinWidth="800"
+        MinHeight="500"
+        Title="MainWindow" Height="500" Width="800">
+    <Window.DataContext>
+        <local:MainViewModel></local:MainViewModel>
+    </Window.DataContext>
+
+    <Border Background="#ffffff" CornerRadius="10">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="30"></ColumnDefinition>
+                    <ColumnDefinition Width="30"></ColumnDefinition>
+                    <ColumnDefinition Width="10"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <svgc:SvgViewbox Grid.Column="0" Height="35" Margin="14 0 0 0" Source="Resources\Icon.svg"/>
+
+                <Button ToolTip="Свернуть окно в трей" x:Name="MinimizeButton" Grid.Column="2" Cursor="Hand" BorderThickness="0">
+                    <Button.Template>
+                        <ControlTemplate>
+                            <Border Height="18" Width="18" CornerRadius="50" Background="{TemplateBinding Background}">
+
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#FF6900"></Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#EE6200"></Setter>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Background" Value="#DD5B00"></Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button ToolTip="Закрыть программу" x:Name="CloseButton" Grid.Column="3" Cursor="Hand" BorderThickness="0">
+                    <Button.Template>
+                        <ControlTemplate>
+                            <Border Height="18" Width="18" CornerRadius="50" Background="{TemplateBinding Background}">
+
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#FF6900"></Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#EE6200"></Setter>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Background" Value="#DD5B00"></Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </Grid>
+
+            <Grid Grid.Row="1" Margin="15 0 15 15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60*"></ColumnDefinition>
+                    <ColumnDefinition Width="40*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0" Margin="0 0 5 0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+
+
+                    <!--<Grid Grid.Row="0">
+                        
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" FontSize="20" Text="Поиск:"></TextBlock>
+                        <TextBox Grid.Row="1" BorderBrush="#CCCCCC" VerticalContentAlignment="Center" Padding="5">
+                            <TextBox.Style>
+                                <Style TargetType="TextBox">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                                                    <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsEnabled" Value="false">
+                                                        <Setter Property="Opacity" TargetName="border" Value="0"/>
+                                                    </Trigger>
+                                                    <Trigger Property="IsFocused" Value="true">
+                                                        <Setter Property="BorderBrush" TargetName="border" Value="#FF6900"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </TextBox.Style>
+                            <TextBox.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="10"></Setter>
+                                </Style>
+                            </TextBox.Resources>
+                        </TextBox>
+                    </Grid>-->
+                    <TextBlock FontSize="24" Grid.Row="0" Text="Персонал:"></TextBlock>
+                    <ListBox Cursor="Hand" x:Name="PersonList" Grid.Row="1" ItemsSource="{Binding Persons}" SelectedValue="{Binding SelectedPerson}" Background="#F6F6F6" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+                        <ListBox.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="werrwe"></MenuItem>
+                                <MenuItem Header="werrwe"></MenuItem>
+                                <MenuItem Header="werrwe"></MenuItem>
+                                <MenuItem Header="werrwe"></MenuItem>
+                            </ContextMenu>
+                        </ListBox.ContextMenu>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="20">
+                                    <TextBlock FontSize="20" Text="{Binding Path=FirstName}"></TextBlock>
+                                    <TextBlock  FontSize="20" Text="{Binding Path=LastName}" Margin="5 0 0 0"></TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListBoxItem">
+                                            <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" Background="{TemplateBinding Background}" Padding="0" SnapsToDevicePixels="true">
+                                                <ContentPresenter x:Name="Content" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter Property="Background" TargetName="Bd" Value="#CCCCCC"/>
+                                                </Trigger>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" TargetName="Bd" Value="#dddddd"/>
+                                                </Trigger>
+                                                <MultiTrigger>
+                                                    <MultiTrigger.Conditions>
+                                                        <Condition Property="IsSelected" Value="True"></Condition>
+                                                        <Condition Property="IsMouseOver" Value="True"></Condition>
+                                                    </MultiTrigger.Conditions>
+                                                    <MultiTrigger.Setters>
+                                                        <Setter Property="Background" TargetName="Bd" Value="#CCCCCC"/>
+                                                    </MultiTrigger.Setters>
+                                                </MultiTrigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+                </Grid>
+                <Grid Grid.Column="1" Margin="5 0 0 0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="40"></RowDefinition>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock FontSize="24" Grid.Row="0"  Text="Обеденное время:"></TextBlock>
+                        <ListBox HorizontalContentAlignment="Stretch"  Grid.Row="1" Margin="0 0 0 10" ItemsSource="{Binding SelectedPerson.Dinners}" Background="#F6F6F6" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="0" FontSize="20" Text="{Binding Path=StartAt, StringFormat=H:mm}"></TextBlock>
+                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" FontSize="20" Text="{Binding Path=EndAt, StringFormat=H:mm}" Margin="5 0 0 0"></TextBlock>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                            <ListBox.Resources>
+                                <ControlTemplate x:Key="ListBoxItemControlTemplate" TargetType="ListBoxItem">
+                                    <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" Background="{TemplateBinding Background}" Padding="0" SnapsToDevicePixels="true">
+                                        <ContentPresenter x:Name="Content" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" TargetName="Bd" Value="#CCCCCC"/>
+                                        </Trigger>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" TargetName="Bd" Value="#dddddd"/>
+                                        </Trigger>
+                                        <MultiTrigger>
+                                            <MultiTrigger.Conditions>
+                                                <Condition Property="IsSelected" Value="True"></Condition>
+                                                <Condition Property="IsMouseOver" Value="True"></Condition>
+                                            </MultiTrigger.Conditions>
+                                            <MultiTrigger.Setters>
+                                                <Setter Property="Background" TargetName="Bd" Value="#CCCCCC"/>
+                                            </MultiTrigger.Setters>
+                                        </MultiTrigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </ListBox.Resources>
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="Template" Value="{StaticResource ListBoxItemControlTemplate}"/>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                        </ListBox>
+                        <Button FontSize="20" Grid.Row="2" Cursor="Hand" BorderThickness="0">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border CornerRadius="10" Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"></ContentPresenter>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#EE6200"></Setter>
+                                        </Trigger>
+                                        <Trigger Property="IsPressed" Value="True">
+                                            <Setter Property="Background" Value="#DD5B00"></Setter>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Background" Value="#FF6900"></Setter>
+                                    <Setter Property="Foreground" Value="#ffffff"></Setter>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsCloseDinner}" Value="True">
+                                            <Setter Property="Content" Value="Старт"></Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsCloseDinner}" Value="False">
+                                            <Setter Property="Content" Value="Стоп"></Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>
