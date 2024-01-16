@@ -9,23 +9,43 @@ using System.Threading.Tasks;
 
 namespace DodoDinner
 {
-    public class Person : INotifyPropertyChanged
+    public class Person
     {
-        private string _FirstName;
-        private string _LastName;
+        private int _Id;
+        public int Id
+        {
+            get
+            {
+                return _Id;
+            }
+            set
+            {
+                _Id = value;
+                OnPropertyChanged("Id");
+            }
+        }
 
+        private string _FirstName;
         public string FirstName
         {
-            get { return _FirstName; }
+            get
+            {
+                return _FirstName;
+            }
             set
             {
                 _FirstName = value;
                 OnPropertyChanged("FirstName");
             }
         }
+
+        private string _LastName;
         public string LastName
         {
-            get { return _LastName; }
+            get
+            {
+                return _LastName;
+            }
             set
             {
                 _LastName = value;
@@ -33,12 +53,12 @@ namespace DodoDinner
             }
         }
 
-        public Person()
+        public bool IsOpenDinner
         {
-            Dinners = new ObservableCollection<Dinner>();
+            get{
+                return Dinners.Any(x => x.EndAt == null);
+            }
         }
-
-        public ObservableCollection<Dinner> Dinners { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
@@ -46,5 +66,7 @@ namespace DodoDinner
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
+
+        public ObservableCollection<Dinner> Dinners { get; set; } = new ObservableCollection<Dinner>();
     }
 }

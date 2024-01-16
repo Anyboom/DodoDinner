@@ -19,7 +19,7 @@
         <local:MainViewModel></local:MainViewModel>
     </Window.DataContext>
 
-    <Border Background="#ffffff" CornerRadius="10">
+    <Border Background="#ffffff">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="60"></RowDefinition>
@@ -91,57 +91,23 @@
 
                 <Grid Grid.Column="0" Margin="0 0 5 0">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="70"></RowDefinition>
                         <RowDefinition Height="40"></RowDefinition>
                         <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
 
-
-                    <!--<Grid Grid.Row="0">
-                        
+                    <Grid Grid.Row="0">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
                             <RowDefinition Height="*"></RowDefinition>
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" FontSize="20" Text="Поиск:"></TextBlock>
-                        <TextBox Grid.Row="1" BorderBrush="#CCCCCC" VerticalContentAlignment="Center" Padding="5">
-                            <TextBox.Style>
-                                <Style TargetType="TextBox">
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate>
-                                                <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
-                                                    <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
-                                                </Border>
-                                                <ControlTemplate.Triggers>
-                                                    <Trigger Property="IsEnabled" Value="false">
-                                                        <Setter Property="Opacity" TargetName="border" Value="0"/>
-                                                    </Trigger>
-                                                    <Trigger Property="IsFocused" Value="true">
-                                                        <Setter Property="BorderBrush" TargetName="border" Value="#FF6900"/>
-                                                    </Trigger>
-                                                </ControlTemplate.Triggers>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </TextBox.Style>
-                            <TextBox.Resources>
-                                <Style TargetType="Border">
-                                    <Setter Property="CornerRadius" Value="10"></Setter>
-                                </Style>
-                            </TextBox.Resources>
-                        </TextBox>
-                    </Grid>-->
-                    <TextBlock FontSize="24" Grid.Row="0" Text="Персонал:"></TextBlock>
-                    <ListBox Cursor="Hand" x:Name="PersonList" Grid.Row="1" ItemsSource="{Binding Persons}" SelectedValue="{Binding SelectedPerson}" Background="#F6F6F6" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
-                        <ListBox.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="werrwe"></MenuItem>
-                                <MenuItem Header="werrwe"></MenuItem>
-                                <MenuItem Header="werrwe"></MenuItem>
-                                <MenuItem Header="werrwe"></MenuItem>
-                            </ContextMenu>
-                        </ListBox.ContextMenu>
+
+                        <TextBlock VerticalAlignment="Center" FontSize="24" Grid.Row="0" Text="Поиск:"></TextBlock>
+                        <TextBox Grid.Row="1" FontSize="16" Text="{Binding FilterPerson, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Padding="5" BorderThickness="0 0 0 1" Background="#F6F6F6"></TextBox>
+                    </Grid>
+                    
+                    <TextBlock FontSize="24" Grid.Row="1" Text="Персонал:"></TextBlock>
+                    <ListBox Cursor="Hand" x:Name="PersonList" Grid.Row="2" ItemsSource="{Binding Persons}" SelectedValue="{Binding SelectedPerson}" Background="#F6F6F6" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" Margin="20">
@@ -174,6 +140,9 @@
                                                         <Setter Property="Background" TargetName="Bd" Value="#CCCCCC"/>
                                                     </MultiTrigger.Setters>
                                                 </MultiTrigger>
+                                                <DataTrigger Binding="{Binding IsOpenDinner}" Value="True">
+                                                    <Setter Property="Background" TargetName="Bd" Value="#AAAAAA"/>
+                                                </DataTrigger>
                                             </ControlTemplate.Triggers>
                                         </ControlTemplate>
                                     </Setter.Value>
@@ -191,17 +160,20 @@
                         </Grid.RowDefinitions>
 
                         <TextBlock FontSize="24" Grid.Row="0"  Text="Обеденное время:"></TextBlock>
-                        <ListBox HorizontalContentAlignment="Stretch"  Grid.Row="1" Margin="0 0 0 10" ItemsSource="{Binding SelectedPerson.Dinners}" Background="#F6F6F6" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                        <ListBox HorizontalContentAlignment="Stretch" Grid.Row="1" Margin="0 0 0 10" ItemsSource="{Binding SelectedPerson.Dinners}" Background="#F6F6F6" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Hidden">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Margin="10">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"></ColumnDefinition>
                                             <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
                                         </Grid.ColumnDefinitions>
 
                                         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="0" FontSize="20" Text="{Binding Path=StartAt, StringFormat=H:mm}"></TextBlock>
                                         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" FontSize="20" Text="{Binding Path=EndAt, StringFormat=H:mm}" Margin="5 0 0 0"></TextBlock>
+
+                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="2" FontSize="20" Text="{Binding Path=Difference}"></TextBlock>
                                     </Grid>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
@@ -235,10 +207,10 @@
                                 </Style>
                             </ListBox.ItemContainerStyle>
                         </ListBox>
-                        <Button FontSize="20" Grid.Row="2" Cursor="Hand" BorderThickness="0">
+                        <Button Command="{Binding AddCommand}" FontSize="20" Grid.Row="2" Cursor="Hand" BorderThickness="0">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
-                                    <Border CornerRadius="10" Background="{TemplateBinding Background}">
+                                    <Border Background="{TemplateBinding Background}">
                                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"></ContentPresenter>
                                     </Border>
                                     <ControlTemplate.Triggers>
@@ -255,11 +227,12 @@
                                 <Style TargetType="Button">
                                     <Setter Property="Background" Value="#FF6900"></Setter>
                                     <Setter Property="Foreground" Value="#ffffff"></Setter>
+                                    <Setter Property="Content" Value="Старт"></Setter>
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsCloseDinner}" Value="True">
+                                        <DataTrigger Binding="{Binding SelectedPerson.IsOpenDinner}" Value="False">
                                             <Setter Property="Content" Value="Старт"></Setter>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding IsCloseDinner}" Value="False">
+                                        <DataTrigger Binding="{Binding SelectedPerson.IsOpenDinner}" Value="True">
                                             <Setter Property="Content" Value="Стоп"></Setter>
                                         </DataTrigger>
                                     </Style.Triggers>
