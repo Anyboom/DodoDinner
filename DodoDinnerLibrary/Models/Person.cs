@@ -7,9 +7,9 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DodoDinner
+namespace DodoDinnerLibrary
 {
-    public class Person
+    public class Person : INotifyPropertyChanged
     {
         private int _Id;
         public int Id

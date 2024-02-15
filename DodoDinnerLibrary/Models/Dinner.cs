@@ -4,25 +4,15 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Windows.Threading;
 
-namespace DodoDinner
+namespace DodoDinnerLibrary
 {
     public class Dinner : INotifyPropertyChanged
     {
-
-        private int _Id;
-        public int Id
-        {
-            get {
-                return _Id; 
-            }
-            set {
-                _Id = value;
-                OnPropertyChanged("Id");
-            }
-        }
-
         private DateTime _StartAt;
         public DateTime StartAt
         {
@@ -47,15 +37,45 @@ namespace DodoDinner
             set
             {
                 _EndAt = value;
+
                 OnPropertyChanged("EndAt");
+                OnPropertyChanged("Difference");
+                OnPropertyChanged("ClosedLate");
             }
         }
 
-        public int Difference
+        public DateTime Difference
         {
             get
             {
-                return (EndAt.HasValue) ? Convert.ToInt32(EndAt.Value.Subtract(StartAt).TotalMinutes) : 0;
+                return (EndAt.HasValue) ? new DateTime(EndAt.Value.Subtract(StartAt).Ticks) : new DateTime(DateTime.Now.Subtract(StartAt).Ticks);
+            }
+        }
+
+        public bool ClosedLate
+        {
+            get
+            {
+                return TimeSpan.FromTicks(Difference.Ticks).TotalHours > 4;
+            }
+        }
+
+        public Dinner()
+        {
+            if(EndAt.HasValue == false)
+            {
+                DispatcherTimer timer = new DispatcherTimer(DispatcherPriority.Render)
+                {
+                    Interval = TimeSpan.FromMilliseconds(500),
+                };
+
+                timer.Tick += (s, e) =>
+                {
+                    OnPropertyChanged("Difference");
+                    OnPropertyChanged("ClosedLate");
+                };
+
+                timer.Start();
             }
         }
 

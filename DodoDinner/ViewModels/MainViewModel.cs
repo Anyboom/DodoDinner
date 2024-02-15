@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DodoDinnerLibrary;
+using LiteDB;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,11 +10,14 @@ using System.Runtime.CompilerServices;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Threading;
 
 namespace DodoDinner
 {
+
     public class MainViewModel : INotifyPropertyChanged
     {
         public ObservableCollection<Person> Persons { get; set; }
@@ -30,21 +35,52 @@ namespace DodoDinner
 
                 OnPropertyChanged("SelectedPerson");
                 OnPropertyChanged("IsOpenDinner");
+                OnPropertyChanged("Dinners");
             }
         }
+
         public MainCommand AddCommand
         {
             get
             {
                 return new MainCommand(obj =>
                 {
+                    DateTime tempDinner = DateTime.Now;
+
                     if (SelectedPerson.IsOpenDinner == true)
                     {
-                        SelectedPerson.Dinners.Last().EndAt = DateTime.Now;
+                        DateTime newDinner = tempDinner;
+
+                        SelectedPerson.Dinners.Last().EndAt = newDinner;
+
+                        using (LiteDatabase db = new LiteDatabase(ResourceManager.PathDB))
+                        {
+                            var colPersons = db.GetCollection<Person>();
+
+                            Person updatePerson = colPersons.FindById(SelectedPerson.Id);
+
+                            updatePerson.Dinners.Last().EndAt = newDinner;
+
+                            colPersons.Update(updatePerson);
+                        }
                     }
                     else
                     {
-                        SelectedPerson.Dinners.Add(new Dinner() { StartAt = DateTime.Now });
+                        Dinner newDinner = new Dinner() { StartAt = tempDinner };
+
+                        using (LiteDatabase db = new LiteDatabase(ResourceManager.PathDB))
+                        {
+                            var colPersons = db.GetCollection<Person>();
+
+                            Person updatePerson = colPersons.FindById(SelectedPerson.Id);
+
+                            updatePerson.Dinners.Add(newDinner);
+
+                            colPersons.Update(updatePerson);
+
+                        }
+
+                        SelectedPerson.Dinners.Add(newDinner);
                     }
 
                     CollectionViewSource.GetDefaultView(Persons).Refresh();
@@ -52,7 +88,9 @@ namespace DodoDinner
 
                     OnPropertyChanged("SelectedPerson");
                     OnPropertyChanged("IsOpenDinner");
-                });
+                    OnPropertyChanged("SelectedPerson.Dinners");
+
+                }, (_) => SelectedPerson != null);
             }
         }
 
@@ -66,25 +104,25 @@ namespace DodoDinner
             set
             {
                 _FilterPerson = value;
+
                 CollectionViewSource.GetDefaultView(Persons).Refresh();
+
                 OnPropertyChanged("FilterPerson");
             }
         }
 
         public MainViewModel()
         {
-            Persons = new ObservableCollection<Person>
+            using (LiteDatabase db = new LiteDatabase(ResourceManager.PathDB))
             {
-                new Person {Id = 5, FirstName = "Даниил", LastName = "Волков", Dinners = { new Dinner() { StartAt = new DateTime(2024, 1, 1, 1, 2, 3)}}},
-                new Person {Id = 6, FirstName = "Аня", LastName = "Доброумова" },
-                new Person {Id = 7, FirstName = "Николай", LastName = "Пятков"  },
-                new Person {Id = 8, FirstName = "Карина", LastName = "Родионова" },
-                new Person {Id = 9, FirstName = "Артем", LastName = "Гасанов"  },
+                ILiteCollection<Person> collectionPersons = db.GetCollection<Person>();
+
+                Persons = new ObservableCollection<Person>(collectionPersons.FindAll().ToList());
             };
 
-            var source = CollectionViewSource.GetDefaultView(Persons);
+            var sourcePersons = CollectionViewSource.GetDefaultView(Persons);
 
-            source.Filter = new Predicate<object>(x =>
+            sourcePersons.Filter = new Predicate<object>(x =>
             {
                 Person item = x as Person;
 
@@ -96,8 +134,7 @@ namespace DodoDinner
                 return true;
             });
 
-            source.SortDescriptions.Add(new SortDescription(nameof(Person.IsOpenDinner), ListSortDirection.Descending));
-
+            sourcePersons.SortDescriptions.Add(new SortDescription(nameof(Person.IsOpenDinner), ListSortDirection.Descending));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -1,12 +1,8 @@
-﻿using DodoDinnerLibrary;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,8 +16,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace DodoDinner
+namespace DodoDinnerConfig
 {
+    /// <summary>
+    /// Логика взаимодействия для MainWindow.xaml
+    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -38,7 +37,7 @@ namespace DodoDinner
 
             MinimizeButton.Click += (s, e) =>
             {
-                WindowState = WindowState.Minimized;
+                this.WindowState = WindowState.Minimized;
             };
 
             CloseButton.Click += (s, e) =>
@@ -46,13 +45,7 @@ namespace DodoDinner
                 Close();
             };
 
-            MaximizeButton.Click += (s, e) =>
-            {
-                WindowState = (WindowState == WindowState.Normal) ? WindowState.Maximized : WindowState.Normal;
-                MaximizeButton.ToolTip = (WindowState == WindowState.Normal) ? "Развернуть окно" : "Вернуть окно в нормальное состояние";
-            };
-
-            Icon = Imaging.CreateBitmapSourceFromHIcon(ResourceManager.Favicon.Handle, new Int32Rect(0, 0, ResourceManager.Favicon.Width, ResourceManager.Favicon.Height), BitmapSizeOptions.FromEmptyOptions());
+            this.Icon = Imaging.CreateBitmapSourceFromHIcon(DodoDinnerLibrary.ResourceManager.Favicon.Handle, new Int32Rect(0, 0, DodoDinnerLibrary.ResourceManager.Favicon.Width, DodoDinnerLibrary.ResourceManager.Favicon.Height), BitmapSizeOptions.FromEmptyOptions());
         }
     }
 }
