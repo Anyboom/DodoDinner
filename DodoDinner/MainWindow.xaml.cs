@@ -36,21 +36,7 @@ namespace DodoDinner
                 }
             };
 
-            MinimizeButton.Click += (s, e) =>
-            {
-                WindowState = WindowState.Minimized;
-            };
-
-            CloseButton.Click += (s, e) =>
-            {
-                Close();
-            };
-
-            MaximizeButton.Click += (s, e) =>
-            {
-                WindowState = (WindowState == WindowState.Normal) ? WindowState.Maximized : WindowState.Normal;
-                MaximizeButton.ToolTip = (WindowState == WindowState.Normal) ? "Развернуть окно" : "Вернуть окно в нормальное состояние";
-            };
+            
 
             Icon = Imaging.CreateBitmapSourceFromHIcon(ResourceManager.Favicon.Handle, new Int32Rect(0, 0, ResourceManager.Favicon.Width, ResourceManager.Favicon.Height), BitmapSizeOptions.FromEmptyOptions());
         }

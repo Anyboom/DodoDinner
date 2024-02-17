@@ -66,7 +66,7 @@ namespace DodoDinnerLibrary
             {
                 DispatcherTimer timer = new DispatcherTimer(DispatcherPriority.Render)
                 {
-                    Interval = TimeSpan.FromMilliseconds(500),
+                    Interval = TimeSpan.FromMilliseconds(1),
                 };
 
                 timer.Tick += (s, e) =>

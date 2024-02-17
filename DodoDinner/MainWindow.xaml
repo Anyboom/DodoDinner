@@ -12,12 +12,8 @@
     Height="600"
     MinWidth="800"
     MinHeight="600"
-    AllowsTransparency="True"
-    Background="Transparent"
     FontFamily="Inter"
-    ResizeMode="CanResizeWithGrip"
     WindowStartupLocation="CenterScreen"
-    WindowStyle="None"
     mc:Ignorable="d">
     <Window.DataContext>
         <local:MainViewModel />
@@ -31,300 +27,233 @@
     </Window.Resources>
 
     <Border Background="#ffffff">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="60" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+        <Grid Margin="15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="40*" />
+                <ColumnDefinition Width="60*" />
+            </Grid.ColumnDefinitions>
 
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="50" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="30" />
-                    <ColumnDefinition Width="30" />
-                    <ColumnDefinition Width="30" />
-                    <ColumnDefinition Width="10" />
-                </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0" Margin="0,0,5,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="70" />
+                    <RowDefinition Height="40" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-                <Viewbox
-                    Grid.Column="0"
-                    Height="35"
-                    Margin="13,0,0,0"
-                    Stretch="Fill">
-                    <Grid>
-                        <Path Data="M38.542,7.526c20.383,0,36.038,14.022,36.038,34.83c0,20.92-15.654,35.169-36.038,35.169H15.682   c-4.617,0-8.447-3.053-8.447-8.368V16.233c0-5.315,3.829-8.707,8.447-8.707H38.542z" Fill="#FF6900" />
-                    </Grid>
-                </Viewbox>
-                <Button
-                    x:Name="MinimizeButton"
-                    Grid.Column="2"
-                    BorderThickness="0"
-                    Cursor="Hand"
-                    Style="{StaticResource MainButton}"
-                    ToolTip="Свернуть окно в трей">
-                    <Button.Template>
-                        <ControlTemplate>
-                            <Border
-                                Width="18"
-                                Height="18"
-                                Background="{TemplateBinding Background}"
-                                CornerRadius="50" />
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
-                <Button
-                    x:Name="MaximizeButton"
-                    Grid.Column="3"
-                    BorderThickness="0"
-                    Cursor="Hand"
-                    Style="{StaticResource MainButton}"
-                    ToolTip="Развернуть окно">
-                    <Button.Template>
-                        <ControlTemplate>
-                            <Border
-                                Width="18"
-                                Height="18"
-                                Background="{TemplateBinding Background}"
-                                CornerRadius="50" />
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
-                <Button
-                    x:Name="CloseButton"
-                    Grid.Column="4"
-                    BorderThickness="0"
-                    Cursor="Hand"
-                    Style="{StaticResource MainButton}"
-                    ToolTip="Закрыть программу">
-                    <Button.Template>
-                        <ControlTemplate>
-                            <Border
-                                Width="18"
-                                Height="18"
-                                Background="{TemplateBinding Background}"
-                                CornerRadius="50" />
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
-            </Grid>
-
-            <Grid Grid.Row="1" Margin="15,0,15,15">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="40*" />
-                    <ColumnDefinition Width="60*" />
-                </Grid.ColumnDefinitions>
-
-                <Grid Grid.Column="0" Margin="0,0,5,0">
+                <Grid Grid.Row="0">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="70" />
-                        <RowDefinition Height="40" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <Grid Grid.Row="0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
+                    <TextBlock
+                        Grid.Row="0"
+                        VerticalAlignment="Center"
+                        FontSize="24"
+                        Text="Поиск:" />
+                    <TextBox
+                        Grid.Row="1"
+                        Padding="5"
+                        VerticalAlignment="Center"
+                        FontSize="16"
+                        Style="{StaticResource MainTextBox}"
+                        Text="{Binding FilterPerson, UpdateSourceTrigger=PropertyChanged}" />
+                </Grid>
 
-                        <TextBlock
-                            Grid.Row="0"
-                            VerticalAlignment="Center"
-                            FontSize="24"
-                            Text="Поиск:" />
-                        <TextBox
-                            Grid.Row="1"
-                            Padding="5"
-                            VerticalAlignment="Center"
-                            FontSize="16"
-                            Style="{StaticResource MainTextBox}"
-                            Text="{Binding FilterPerson, UpdateSourceTrigger=PropertyChanged}" />
-                    </Grid>
+                <TextBlock
+                    Grid.Row="1"
+                    FontSize="24"
+                    Text="Персонал:" />
+                <ListBox
+                    x:Name="PersonList"
+                    Grid.Row="2"
+                    Background="#F6F6F6"
+                    BorderThickness="0"
+                    Cursor="Hand"
+                    ItemsSource="{Binding Persons}"
+                    ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                    ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                    SelectedValue="{Binding SelectedPerson}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel
+                                x:Name="mainPanel"
+                                Margin="20"
+                                Orientation="Horizontal">
+                                <TextBlock FontSize="20" Text="{Binding Path=FirstName}" />
+                                <TextBlock
+                                    Margin="5,0,0,0"
+                                    FontSize="20"
+                                    Text="{Binding Path=LastName}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Template" Value="{StaticResource MainListBox}" />
+                            <Setter Property="BorderThickness" Value="0" />
+                            <Setter Property="BorderBrush" Value="Transparent" />
+                            <Style.Triggers>
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="IsSelected" Value="True" />
+                                        <Condition Property="IsMouseOver" Value="True" />
+                                    </MultiTrigger.Conditions>
+                                    <MultiTrigger.Setters>
+                                        <Setter Property="Background" Value="#ddd" />
+                                    </MultiTrigger.Setters>
+                                </MultiTrigger>
+
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding IsOpenDinner}" Value="True" />
+                                        <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsSelected}" Value="True" />
+                                    </MultiDataTrigger.Conditions>
+                                    <MultiDataTrigger.Setters>
+                                        <Setter Property="BorderThickness" Value="0,0,4,0" />
+                                        <Setter Property="BorderBrush" Value="#aaa" />
+                                    </MultiDataTrigger.Setters>
+                                </MultiDataTrigger>
+
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding IsOpenDinner}" Value="False" />
+                                        <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsSelected}" Value="True" />
+                                    </MultiDataTrigger.Conditions>
+                                    <MultiDataTrigger.Setters>
+                                        <Setter Property="BorderThickness" Value="0,0,4,0" />
+                                        <Setter Property="BorderBrush" Value="#c4c4c4" />
+                                    </MultiDataTrigger.Setters>
+                                </MultiDataTrigger>
+
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#e5e5e5" />
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#dddddd" />
+                                </Trigger>
+                                <DataTrigger Binding="{Binding IsOpenDinner}" Value="True">
+                                    <Setter Property="Background" Value="#ccc" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+            </Grid>
+            <Grid Grid.Column="1" Margin="5,0,0,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="34" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="35" />
+                    </Grid.RowDefinitions>
 
                     <TextBlock
-                        Grid.Row="1"
+                        Grid.Row="0"
                         FontSize="24"
-                        Text="Персонал:" />
+                        Text="Обеденное время:" />
                     <ListBox
-                        x:Name="PersonList"
-                        Grid.Row="2"
+                        Grid.Row="1"
+                        Margin="0,0,0,10"
+                        HorizontalContentAlignment="Stretch"
                         Background="#F6F6F6"
                         BorderThickness="0"
-                        Cursor="Hand"
-                        ItemsSource="{Binding Persons}"
-                        ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                        ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                        SelectedValue="{Binding SelectedPerson}">
+                        ItemsSource="{Binding Source={StaticResource cvsActors}}"
+                        ScrollViewer.VerticalScrollBarVisibility="Hidden">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel
-                                    x:Name="mainPanel"
-                                    Margin="20"
-                                    Orientation="Horizontal">
-                                    <TextBlock FontSize="20" Text="{Binding Path=FirstName}" />
-                                    <TextBlock
-                                        Margin="5,0,0,0"
-                                        FontSize="20"
-                                        Text="{Binding Path=LastName}" />
-                                </StackPanel>
+                                <Grid Margin="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0" HorizontalAlignment="Left">
+                                        <TextBlock
+                                            VerticalAlignment="Center"
+                                            FontSize="20"
+                                            Text="Начало:" />
+                                        <TextBlock
+                                            VerticalAlignment="Center"
+                                            FontSize="20"
+                                            Text="{Binding Path=StartAt, StringFormat=H:mm}">
+                                            <TextBlock.ToolTip>
+                                                <TextBlock Text="{Binding Path=StartAt, StringFormat='dd.MM.yyyy H:mm:ss:fff'}" />
+                                            </TextBlock.ToolTip>
+                                        </TextBlock>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" HorizontalAlignment="Left">
+                                        <TextBlock
+                                            VerticalAlignment="Center"
+                                            FontSize="20"
+                                            Text="Конец:" />
+                                        <TextBlock
+                                            VerticalAlignment="Center"
+                                            FontSize="20"
+                                            Text="{Binding Path=EndAt, StringFormat=H:mm}">
+                                            <TextBlock.ToolTip>
+                                                <TextBlock Text="{Binding Path=EndAt, StringFormat='dd.MM.yyyy H:mm:ss:fff'}" />
+                                            </TextBlock.ToolTip>
+                                        </TextBlock>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2" HorizontalAlignment="Left">
+                                        <TextBlock
+                                            VerticalAlignment="Center"
+                                            FontSize="20"
+                                            Text="Разница:" />
+                                        <TextBlock
+                                            Grid.Column="2"
+                                            VerticalAlignment="Center"
+                                            FontSize="20"
+                                            Text="{Binding Path=Difference, StringFormat=H:mm}">
+                                            <TextBlock.ToolTip>
+                                                <TextBlock Text="{Binding Path=Difference, StringFormat='dd.MM.yyyy H:mm:ss:fff'}" />
+                                            </TextBlock.ToolTip>
+                                        </TextBlock>
+                                    </StackPanel>
+                                    <Grid.Style>
+                                        <Style TargetType="Grid">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Path=ClosedLate}" Value="True">
+                                                    <Setter Property="TextBlock.Foreground" Value="#FF6900" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Grid.Style>
+                                </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
                                 <Setter Property="Template" Value="{StaticResource MainListBox}" />
-                                <Setter Property="BorderThickness" Value="0" />
-                                <Setter Property="BorderBrush" Value="Transparent" />
-                                <Style.Triggers>
-                                    <MultiTrigger>
-                                        <MultiTrigger.Conditions>
-                                            <Condition Property="IsSelected" Value="True" />
-                                            <Condition Property="IsMouseOver" Value="True" />
-                                        </MultiTrigger.Conditions>
-                                        <MultiTrigger.Setters>
-                                            <Setter Property="Background" Value="#ddd" />
-                                        </MultiTrigger.Setters>
-                                    </MultiTrigger>
-
-                                    <MultiDataTrigger>
-                                        <MultiDataTrigger.Conditions>
-                                            <Condition Binding="{Binding IsOpenDinner}" Value="True" />
-                                            <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsSelected}" Value="True" />
-                                        </MultiDataTrigger.Conditions>
-                                        <MultiDataTrigger.Setters>
-                                            <Setter Property="BorderThickness" Value="0,0,4,0" />
-                                            <Setter Property="BorderBrush" Value="#aaa" />
-                                        </MultiDataTrigger.Setters>
-                                    </MultiDataTrigger>
-
-                                    <MultiDataTrigger>
-                                        <MultiDataTrigger.Conditions>
-                                            <Condition Binding="{Binding IsOpenDinner}" Value="False" />
-                                            <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsSelected}" Value="True" />
-                                        </MultiDataTrigger.Conditions>
-                                        <MultiDataTrigger.Setters>
-                                            <Setter Property="BorderThickness" Value="0,0,4,0" />
-                                            <Setter Property="BorderBrush" Value="#c4c4c4" />
-                                        </MultiDataTrigger.Setters>
-                                    </MultiDataTrigger>
-
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="#e5e5e5" />
-                                    </Trigger>
-                                    <Trigger Property="IsSelected" Value="True">
-                                        <Setter Property="Background" Value="#dddddd" />
-                                    </Trigger>
-                                    <DataTrigger Binding="{Binding IsOpenDinner}" Value="True">
-                                        <Setter Property="Background" Value="#ccc" />
-                                    </DataTrigger>
-                                </Style.Triggers>
                             </Style>
                         </ListBox.ItemContainerStyle>
                     </ListBox>
-                </Grid>
-                <Grid Grid.Column="1" Margin="5,0,0,0">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="34" />
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="35" />
-                        </Grid.RowDefinitions>
+                    <Button
+                        Grid.Row="2"
+                        BorderThickness="0"
+                        Command="{Binding AddCommand}"
+                        Cursor="Hand"
+                        FontSize="20"
+                        Style="{StaticResource MainButton}">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding SelectedPerson.IsOpenDinner}" Value="False">
+                                        <Setter Property="Content" Value="Старт" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding SelectedPerson.IsOpenDinner}" Value="True">
+                                        <Setter Property="Content" Value="Стоп" />
+                                    </DataTrigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
 
-                        <TextBlock
-                            Grid.Row="0"
-                            FontSize="24"
-                            Text="Обеденное время:" />
-                        <ListBox
-                            Grid.Row="1"
-                            Margin="0,0,0,10"
-                            HorizontalContentAlignment="Stretch"
-                            Background="#F6F6F6"
-                            BorderThickness="0"
-                            ItemsSource="{Binding Source={StaticResource cvsActors}}"
-                            ScrollViewer.VerticalScrollBarVisibility="Hidden">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid Margin="10">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-
-                                        <StackPanel Grid.Column="0" HorizontalAlignment="Left">
-                                            <TextBlock
-                                                VerticalAlignment="Center"
-                                                FontSize="20"
-                                                Text="{Binding Path=StartAt, StringFormat=dd.MM.yyyy}" />
-                                            <TextBlock
-                                                VerticalAlignment="Center"
-                                                FontSize="20"
-                                                Text="{Binding Path=StartAt, StringFormat=H:mm:ss}" />
-                                        </StackPanel>
-                                        <StackPanel Grid.Column="1" HorizontalAlignment="Left">
-                                            <TextBlock
-                                                VerticalAlignment="Center"
-                                                FontSize="20"
-                                                Text="{Binding Path=EndAt, StringFormat=dd.MM.yyyy}" />
-                                            <TextBlock
-                                                VerticalAlignment="Center"
-                                                FontSize="20"
-                                                Text="{Binding Path=EndAt, StringFormat=H:mm:ss}" />
-                                        </StackPanel>
-                                        <StackPanel Grid.Column="2" HorizontalAlignment="Left">
-                                            <TextBlock
-                                                VerticalAlignment="Center"
-                                                FontSize="20"
-                                                Text="Разница:" />
-                                            <TextBlock
-                                                Grid.Column="2"
-                                                VerticalAlignment="Center"
-                                                FontSize="20"
-                                                Text="{Binding Path=Difference, StringFormat=H:mm:ss}" />
-                                        </StackPanel>
-                                        <Grid.Style>
-                                            <Style TargetType="Grid">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding Path=ClosedLate}" Value="True">
-                                                        <Setter Property="TextBlock.Foreground" Value="#FF6900" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Grid.Style>
-                                    </Grid>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                            <ListBox.ItemContainerStyle>
-                                <Style TargetType="ListBoxItem">
-                                    <Setter Property="Template" Value="{StaticResource MainListBox}" />
-                                </Style>
-                            </ListBox.ItemContainerStyle>
-                        </ListBox>
-                        <Button
-                            Grid.Row="2"
-                            BorderThickness="0"
-                            Command="{Binding AddCommand}"
-                            Cursor="Hand"
-                            FontSize="20"
-                            Style="{StaticResource MainButton}">
-                            <Button.Template>
-                                <ControlTemplate TargetType="Button">
-                                    <Border Background="{TemplateBinding Background}">
-                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <DataTrigger Binding="{Binding SelectedPerson.IsOpenDinner}" Value="False">
-                                            <Setter Property="Content" Value="Старт" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding SelectedPerson.IsOpenDinner}" Value="True">
-                                            <Setter Property="Content" Value="Стоп" />
-                                        </DataTrigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Button.Template>
-
-                        </Button>
-                    </Grid>
+                    </Button>
                 </Grid>
             </Grid>
         </Grid>

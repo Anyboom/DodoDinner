@@ -35,7 +35,6 @@ namespace DodoDinner
 
                 OnPropertyChanged("SelectedPerson");
                 OnPropertyChanged("IsOpenDinner");
-                OnPropertyChanged("Dinners");
             }
         }
 
@@ -88,7 +87,6 @@ namespace DodoDinner
 
                     OnPropertyChanged("SelectedPerson");
                     OnPropertyChanged("IsOpenDinner");
-                    OnPropertyChanged("SelectedPerson.Dinners");
 
                 }, (_) => SelectedPerson != null);
             }
