@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:DodoDinner"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:md="https://github.com/fantasticfiasco/mvvm-dialogs"
     xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
     xmlns:system="clr-namespace:System;assembly=mscorlib"
     Title="MainWindow"
@@ -12,19 +13,25 @@
     Height="600"
     MinWidth="800"
     MinHeight="600"
-    FontFamily="Inter"
+    md:DialogServiceViews.IsRegistered="True"
+    FontFamily="DodoRounded"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
-    <Window.DataContext>
-        <local:MainViewModel />
-    </Window.DataContext>
     <Window.Resources>
-        <CollectionViewSource x:Key="cvsActors" Source="{Binding SelectedPerson.Dinners}">
-            <CollectionViewSource.SortDescriptions>
-                <scm:SortDescription Direction="Descending" PropertyName="StartAt" />
-            </CollectionViewSource.SortDescriptions>
-        </CollectionViewSource>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Styles/Button.xaml" />
+                <ResourceDictionary Source="../Styles/ListBox.xaml" />
+                <ResourceDictionary Source="../Styles/TextBox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding
+            Command="{Binding ShowPersonsCommand}"
+            Gesture="Ctrl+Alt+F"
+            HotkeyManager.RegisterGlobalHotkey="True" />
+    </Window.InputBindings>
 
     <Border Background="#ffffff">
         <Grid Margin="15">
@@ -36,7 +43,7 @@
             <Grid Grid.Column="0" Margin="0,0,5,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="70" />
-                    <RowDefinition Height="40" />
+                    <RowDefinition Height="35" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
@@ -56,8 +63,7 @@
                         Padding="5"
                         VerticalAlignment="Center"
                         FontSize="16"
-                        Style="{StaticResource MainTextBox}"
-                        Text="{Binding FilterPerson, UpdateSourceTrigger=PropertyChanged}" />
+                        Style="{StaticResource MainTextBox}" />
                 </Grid>
 
                 <TextBlock
@@ -69,11 +75,8 @@
                     Grid.Row="2"
                     Background="#F6F6F6"
                     BorderThickness="0"
-                    Cursor="Hand"
-                    ItemsSource="{Binding Persons}"
                     ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                    ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                    SelectedValue="{Binding SelectedPerson}">
+                    ScrollViewer.VerticalScrollBarVisibility="Hidden">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel
@@ -92,6 +95,7 @@
                         <Style TargetType="ListBoxItem">
                             <Setter Property="Template" Value="{StaticResource MainListBox}" />
                             <Setter Property="BorderThickness" Value="0" />
+                            <Setter Property="Cursor" Value="Hand" />
                             <Setter Property="BorderBrush" Value="Transparent" />
                             <Style.Triggers>
                                 <MultiTrigger>
@@ -158,7 +162,6 @@
                         HorizontalContentAlignment="Stretch"
                         Background="#F6F6F6"
                         BorderThickness="0"
-                        ItemsSource="{Binding Source={StaticResource cvsActors}}"
                         ScrollViewer.VerticalScrollBarVisibility="Hidden">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
@@ -233,7 +236,6 @@
                     <Button
                         Grid.Row="2"
                         BorderThickness="0"
-                        Command="{Binding AddCommand}"
                         Cursor="Hand"
                         FontSize="20"
                         Style="{StaticResource MainButton}">
@@ -242,14 +244,14 @@
                                 <Border Background="{TemplateBinding Background}">
                                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                 </Border>
-                                <ControlTemplate.Triggers>
+                                <!--<ControlTemplate.Triggers>
                                     <DataTrigger Binding="{Binding SelectedPerson.IsOpenDinner}" Value="False">
                                         <Setter Property="Content" Value="Старт" />
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding SelectedPerson.IsOpenDinner}" Value="True">
                                         <Setter Property="Content" Value="Стоп" />
                                     </DataTrigger>
-                                </ControlTemplate.Triggers>
+                                </ControlTemplate.Triggers>-->
                             </ControlTemplate>
                         </Button.Template>
 

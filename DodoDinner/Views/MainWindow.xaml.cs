@@ -24,21 +24,13 @@ namespace DodoDinner
 {
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public MainWindow(MainViewModel mainViewModel)
         {
             InitializeComponent();
 
-            this.MouseDown += (s, e) =>
-            {
-                if (e.LeftButton == MouseButtonState.Pressed)
-                {
-                    DragMove();
-                }
-            };
+            DataContext = mainViewModel;
 
-            
-
-            Icon = Imaging.CreateBitmapSourceFromHIcon(ResourceManager.Favicon.Handle, new Int32Rect(0, 0, ResourceManager.Favicon.Width, ResourceManager.Favicon.Height), BitmapSizeOptions.FromEmptyOptions());
+            //Icon = Imaging.CreateBitmapSourceFromHIcon(Resources.Favicon.Handle, new Int32Rect(0, 0, Resources.Favicon.Width, Resources.Favicon.Height), BitmapSizeOptions.FromEmptyOptions());
         }
     }
 }
