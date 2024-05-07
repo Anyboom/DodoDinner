@@ -106,6 +106,8 @@ namespace DodoDinner.ViewModels
 
             _collectionViewDinner.Refresh();
             _collectionViewPerson.Refresh();
+
+            OnPropertyChanged(nameof(SelectedPerson));
         }
 
         private void ShowPersons(object obj)

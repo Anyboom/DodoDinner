@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:md="https://github.com/fantasticfiasco/mvvm-dialogs"
     xmlns:viewModels="clr-namespace:DodoDinner.ViewModels"
-    Title="MainWindow"
+    Title="Учет обедов"
     Width="800"
     Height="600"
     MinWidth="800"
