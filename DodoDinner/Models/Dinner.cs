@@ -1,19 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Windows.Threading;
-using DodoDinner;
 
-namespace DodoDinnerLibrary
+namespace DodoDinner.Models
 {
     public class Dinner : BindableBase
     {
+        public Person Person { get; set; }
+
         private int _id;
         public int Id
         {

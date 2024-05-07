@@ -1,5 +1,4 @@
 ﻿using DodoDinner.Repositories;
-using DodoDinnerLibrary;
 using Microsoft.EntityFrameworkCore;
 using MvvmDialogs;
 using System;
@@ -10,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Input;
+using DodoDinner.Commands;
+using DodoDinner.Models;
 
 namespace DodoDinner.ViewModels
 {
@@ -25,21 +26,19 @@ namespace DodoDinner.ViewModels
 
         public ObservableCollection<Person> Items { get; set; }
 
-        private string _searchText = string.Empty;
-
         public string SearchText
         {
-            get
-            {
-                return _searchText;
-            }
             set
             {
-                _searchText = value;
+                _collectionView.Filter = (x) =>
+                {
+                    if (x == null && value == null)
+                    {
+                        return true;
+                    }
 
-                OnPropertyChanged(nameof(SearchText));
-
-                _collectionView.Refresh();
+                    return x.ToString().Contains(value);
+                };
             }
         }
 
@@ -51,16 +50,19 @@ namespace DodoDinner.ViewModels
             }
             set
             {
-                _selectedItem = value;
+                _selectedItem = value ?? new Person();
 
-                InputItem = value.ToString();
+                FirstName = SelectedItem.FirstName;
+                LastName = SelectedItem.LastName;
 
                 OnPropertyChanged(nameof(SelectedItem));
-                OnPropertyChanged(nameof(InputItem));
+                OnPropertyChanged(nameof(FirstName));
+                OnPropertyChanged(nameof(LastName));
             }
         }
 
-        public string InputItem { get; set; } = string.Empty;
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
 
         public ICommand AddItemCommand { get; set; }
         public ICommand EditItemCommand { get; set; }
@@ -73,24 +75,15 @@ namespace DodoDinner.ViewModels
             _mainRepository = mainRepository;
             _dialogService = dialogService;
 
-            Items = _mainRepository.Set<Person>().Local.ToObservableCollection();
+            Items = _mainRepository.Persons.Local.ToObservableCollection();
 
-            _collectionView = (CollectionView)CollectionViewSource.GetDefaultView(Items);
+            _collectionView = (CollectionView) CollectionViewSource.GetDefaultView(Items);
 
-            _collectionView.Filter = FilterTeamByName;
-
-            AddItemCommand = new RelayCommand(AddItem, x => InputItem?.Length > 0);
-            EditItemCommand = new RelayCommand(EditItem, x => InputItem?.Length > 0);
-            RemoveItemCommand = new RelayCommand(RemoveItem, x => InputItem?.Length > 0);
+            AddItemCommand = new RelayCommand(AddItem, x => FirstName?.Length > 0 && LastName?.Length > 0);
+            EditItemCommand = new RelayCommand(EditItem, x => FirstName?.Length > 0 && LastName?.Length > 0);
+            RemoveItemCommand = new RelayCommand(RemoveItem, x => FirstName?.Length > 0 && LastName?.Length > 0);
             SaveItemsCommand = new RelayCommand(SaveItems);
             ClosedWindowCommand = new RelayCommand(ClosedWindow);
-        }
-
-        private bool FilterTeamByName(object x)
-        {
-            Person item = (Person)x;
-
-            return item.ToString().Contains(SearchText);
         }
 
         private void ClosedWindow(object obj)
@@ -131,17 +124,19 @@ namespace DodoDinner.ViewModels
 
         private void EditItem(object obj)
         {
-            //SelectedItem.Name = InputItem;
+            SelectedItem.FirstName = FirstName;
+            SelectedItem.LastName = LastName;
         }
 
         private void AddItem(object obj)
         {
-            //Person item = new Person()
-            //{
-            //    Name = InputItem
-            //};
+            Person item = new Person()
+            {
+                FirstName = FirstName,
+                LastName = LastName
+            };
 
-            //_mainRepository.Set<Person>().Add(item);
+            _mainRepository.Persons.Add(item);
         }
     }
 }

@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using DodoDinner;
 
-namespace DodoDinnerLibrary
+namespace DodoDinner.Models
 {
     public class Person : BindableBase
     {
@@ -55,14 +48,15 @@ namespace DodoDinnerLibrary
             }
         }
 
-        public ObservableCollection<Dinner> Dinners { get; set; } = new ObservableCollection<Dinner>();
-
-        public bool IsOpenDinner
+        public bool IsDinnerOpen
         {
-            get{
+            get
+            {
                 return Dinners.Any(x => x.ClosedAt == null);
             }
         }
+
+        public ObservableCollection<Dinner> Dinners { get; set; } = new ObservableCollection<Dinner>();
 
         public override string ToString()
         {

@@ -15,6 +15,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>DodoDinner.Program</StartupObject>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <Resource Include="Favicon.ico" />
@@ -22,6 +23,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.4" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />
     <PackageReference Include="MvvmDialogs" Version="9.1.2" />
     <PackageReference Include="NHotkey.Wpf" Version="3.0.0" />
     <PackageReference Include="SimpleInjector" Version="5.4.5" />

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace DodoDinnerLibrary
+namespace DodoDinner.Commands
 {
     public class RelayCommand : ICommand
     {

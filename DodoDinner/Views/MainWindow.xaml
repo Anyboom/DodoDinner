@@ -1,20 +1,19 @@
 ﻿<Window
-    x:Class="DodoDinner.MainWindow"
+    x:Class="DodoDinner.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:DodoDinner"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:md="https://github.com/fantasticfiasco/mvvm-dialogs"
-    xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
-    xmlns:system="clr-namespace:System;assembly=mscorlib"
+    xmlns:viewModels="clr-namespace:DodoDinner.ViewModels"
     Title="MainWindow"
     Width="800"
     Height="600"
     MinWidth="800"
     MinHeight="600"
     md:DialogServiceViews.IsRegistered="True"
-    FontFamily="DodoRounded"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <Window.Resources>
@@ -63,7 +62,8 @@
                         Padding="5"
                         VerticalAlignment="Center"
                         FontSize="16"
-                        Style="{StaticResource MainTextBox}" />
+                        Style="{StaticResource MainTextBox}"
+                        Text="{Binding SearchText, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}" />
                 </Grid>
 
                 <TextBlock
@@ -71,18 +71,13 @@
                     FontSize="24"
                     Text="Персонал:" />
                 <ListBox
-                    x:Name="PersonList"
                     Grid.Row="2"
-                    Background="#F6F6F6"
-                    BorderThickness="0"
-                    ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                    ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                    ItemsSource="{Binding Persons}"
+                    SelectedItem="{Binding SelectedPerson}"
+                    Style="{StaticResource MainListBox}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel
-                                x:Name="mainPanel"
-                                Margin="20"
-                                Orientation="Horizontal">
+                            <StackPanel Margin="20" Orientation="Horizontal">
                                 <TextBlock FontSize="20" Text="{Binding Path=FirstName}" />
                                 <TextBlock
                                     Margin="5,0,0,0"
@@ -92,25 +87,11 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                     <ListBox.ItemContainerStyle>
-                        <Style TargetType="ListBoxItem">
-                            <Setter Property="Template" Value="{StaticResource MainListBox}" />
-                            <Setter Property="BorderThickness" Value="0" />
-                            <Setter Property="Cursor" Value="Hand" />
-                            <Setter Property="BorderBrush" Value="Transparent" />
+                        <Style BasedOn="{StaticResource ListBoxItemStyle}" TargetType="{x:Type ListBoxItem}">
                             <Style.Triggers>
-                                <MultiTrigger>
-                                    <MultiTrigger.Conditions>
-                                        <Condition Property="IsSelected" Value="True" />
-                                        <Condition Property="IsMouseOver" Value="True" />
-                                    </MultiTrigger.Conditions>
-                                    <MultiTrigger.Setters>
-                                        <Setter Property="Background" Value="#ddd" />
-                                    </MultiTrigger.Setters>
-                                </MultiTrigger>
-
                                 <MultiDataTrigger>
                                     <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding IsOpenDinner}" Value="True" />
+                                        <Condition Binding="{Binding IsDinnerOpen}" Value="True" />
                                         <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsSelected}" Value="True" />
                                     </MultiDataTrigger.Conditions>
                                     <MultiDataTrigger.Setters>
@@ -121,7 +102,7 @@
 
                                 <MultiDataTrigger>
                                     <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding IsOpenDinner}" Value="False" />
+                                        <Condition Binding="{Binding IsDinnerOpen}" Value="False" />
                                         <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsSelected}" Value="True" />
                                     </MultiDataTrigger.Conditions>
                                     <MultiDataTrigger.Setters>
@@ -130,13 +111,7 @@
                                     </MultiDataTrigger.Setters>
                                 </MultiDataTrigger>
 
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#e5e5e5" />
-                                </Trigger>
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="#dddddd" />
-                                </Trigger>
-                                <DataTrigger Binding="{Binding IsOpenDinner}" Value="True">
+                                <DataTrigger Binding="{Binding IsDinnerOpen}" Value="True">
                                     <Setter Property="Background" Value="#ccc" />
                                 </DataTrigger>
                             </Style.Triggers>
@@ -160,9 +135,32 @@
                         Grid.Row="1"
                         Margin="0,0,0,10"
                         HorizontalContentAlignment="Stretch"
-                        Background="#F6F6F6"
-                        BorderThickness="0"
-                        ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                        ItemsSource="{Binding SelectedPerson.Dinners}"
+                        Style="{StaticResource MainListBox}">
+                        <ListBox.ItemContainerStyle>
+                            <Style BasedOn="{StaticResource ListBoxItemStyle}" TargetType="{x:Type ListBoxItem}">
+                                <Setter Property="Cursor" Value="Arrow" />
+                                <Style.Triggers>
+                                    <MultiTrigger>
+                                        <MultiTrigger.Conditions>
+                                            <Condition Property="IsSelected" Value="True" />
+                                            <Condition Property="IsMouseOver" Value="True" />
+                                        </MultiTrigger.Conditions>
+                                        <MultiTrigger.Setters>
+                                            <Setter Property="Background" Value="Transparent" />
+                                        </MultiTrigger.Setters>
+                                    </MultiTrigger>
+
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="Transparent" />
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="Transparent" />
+                                    </Trigger>
+
+                                </Style.Triggers>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <Grid Margin="10">
@@ -171,7 +169,6 @@
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-
                                     <StackPanel Grid.Column="0" HorizontalAlignment="Left">
                                         <TextBlock
                                             VerticalAlignment="Center"
@@ -180,9 +177,9 @@
                                         <TextBlock
                                             VerticalAlignment="Center"
                                             FontSize="20"
-                                            Text="{Binding Path=StartAt, StringFormat=H:mm}">
+                                            Text="{Binding Path=StartedAt, StringFormat=H:mm}">
                                             <TextBlock.ToolTip>
-                                                <TextBlock Text="{Binding Path=StartAt, StringFormat='dd.MM.yyyy H:mm:ss:fff'}" />
+                                                <TextBlock Text="{Binding Path=StartedAt, StringFormat='dd.MM.yyyy H:mm:ss:fff'}" />
                                             </TextBlock.ToolTip>
                                         </TextBlock>
                                     </StackPanel>
@@ -194,9 +191,9 @@
                                         <TextBlock
                                             VerticalAlignment="Center"
                                             FontSize="20"
-                                            Text="{Binding Path=EndAt, StringFormat=H:mm}">
+                                            Text="{Binding Path=ClosedAt, StringFormat=H:mm}">
                                             <TextBlock.ToolTip>
-                                                <TextBlock Text="{Binding Path=EndAt, StringFormat='dd.MM.yyyy H:mm:ss:fff'}" />
+                                                <TextBlock Text="{Binding Path=ClosedAt, StringFormat='dd.MM.yyyy H:mm:ss:fff'}" />
                                             </TextBlock.ToolTip>
                                         </TextBlock>
                                     </StackPanel>
@@ -206,7 +203,6 @@
                                             FontSize="20"
                                             Text="Разница:" />
                                         <TextBlock
-                                            Grid.Column="2"
                                             VerticalAlignment="Center"
                                             FontSize="20"
                                             Text="{Binding Path=Difference, StringFormat=H:mm}">
@@ -215,46 +211,29 @@
                                             </TextBlock.ToolTip>
                                         </TextBlock>
                                     </StackPanel>
-                                    <Grid.Style>
-                                        <Style TargetType="Grid">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Path=ClosedLate}" Value="True">
-                                                    <Setter Property="TextBlock.Foreground" Value="#FF6900" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Grid.Style>
                                 </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
-                        <ListBox.ItemContainerStyle>
-                            <Style TargetType="ListBoxItem">
-                                <Setter Property="Template" Value="{StaticResource MainListBox}" />
-                            </Style>
-                        </ListBox.ItemContainerStyle>
                     </ListBox>
                     <Button
                         Grid.Row="2"
-                        BorderThickness="0"
-                        Cursor="Hand"
-                        FontSize="20"
-                        Style="{StaticResource MainButton}">
-                        <Button.Template>
-                            <ControlTemplate TargetType="Button">
-                                <Border Background="{TemplateBinding Background}">
-                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                </Border>
-                                <!--<ControlTemplate.Triggers>
-                                    <DataTrigger Binding="{Binding SelectedPerson.IsOpenDinner}" Value="False">
+                        Command="{Binding TouchDinnerCommand}"
+                        FontSize="20">
+                        <Button.Resources>
+                            <Style BasedOn="{StaticResource MainButton}" TargetType="{x:Type Button}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding SelectedPerson}" Value="{x:Null}">
                                         <Setter Property="Content" Value="Старт" />
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding SelectedPerson.IsOpenDinner}" Value="True">
+                                    <DataTrigger Binding="{Binding SelectedPerson.IsDinnerOpen}" Value="False">
+                                        <Setter Property="Content" Value="Старт" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding SelectedPerson.IsDinnerOpen}" Value="True">
                                         <Setter Property="Content" Value="Стоп" />
                                     </DataTrigger>
-                                </ControlTemplate.Triggers>-->
-                            </ControlTemplate>
-                        </Button.Template>
-
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Resources>
                     </Button>
                 </Grid>
             </Grid>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DodoDinnerLibrary;
+using DodoDinner.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DodoDinner.Repositories
@@ -12,6 +12,11 @@ namespace DodoDinner.Repositories
     {
         public DbSet<Dinner> Dinners { get; set; } = null!;
         public DbSet<Person> Persons { get; set; } = null!;
+
+        public MainRepository()
+        {
+            Database.EnsureCreated();
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

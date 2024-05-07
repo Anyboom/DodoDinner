@@ -33,6 +33,7 @@ namespace DodoDinner
             var app = new App();
 
             MainWindow mainWindow = container.GetInstance<MainWindow>();
+            mainWindow.DataContext = container.GetInstance<MainViewModel>();
 
             app.Run(mainWindow);
         }
